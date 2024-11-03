@@ -1,0 +1,77 @@
+name: ${COMPOSE_NAME}
+
+services:
+  database:
+    image: mysql:${MYSQL_IMAGE_VERSION}
+    container_name: ${DATABASE_NAME}
+    # extends: # extends another service in another file
+    #   file: ${EXTENDS_PATH_FILE}
+    #   service: ${EXTENDS_SERVICE}
+    # depends_on:
+    #   - Foo
+    env_file:
+      - path: ./.env
+        required: ${ENV_FILE_REQUIRED}
+    restart: ${DATABASE_RESTART}
+    # secrets:
+    #   - db_root_password
+    #   - db_user_name
+    #   - db_user_password
+    #   - db_name
+    environment:
+      # ---- Env variables with secrets ----
+      # MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      # MYSQL_USER_FILE: /run/secrets/db_user_name
+      # MYSQL_PASSWORD_FILE: /run/secrets/db_user_password
+      # MYSQL_DATABASE_FILE: /run/secrets/db_name
+
+      # ---- Env variables with .env ----
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWD}
+      MYSQL_USER: ${MYSQL_USER_NAME}
+      MYSQL_PASSWORD: ${MYSQL_USER_PASSWD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - ${DATABASE_PORT}:3306
+    volumes:
+     - type: volume
+       source: DatabaseVolume
+       target: /var/lib/mysql
+    networks:
+      - DatabaseNetwork
+    mem_limit: ${DATABASE_MEM_LIMIT}
+    cpu_count: ${DATABASE_CPU_COUNT}
+    blkio_config:
+      device_read_bps:
+        - path: /dev/sda
+          rate: ${DATABASE_READ_BPS}
+      device_write_bps:
+        - path: /dev/sda
+          rate: ${DATABASE_WRITE_BPS}
+      device_read_iops:
+        - path: /dev/sda
+          rate: ${DATABASE_READ_IOPS}
+      device_write_iops:
+        - path: /dev/sda
+          rate: ${DATABASE_WRITE_IOPS}
+
+volumes:
+  DatabaseVolume:
+   name: ${DATABASE_VOLUME_NAME}
+
+networks:
+  DatabaseNetwork:
+    name: ${NETWORK_NAME}
+    driver: ${NETWORK_DRIVER}
+
+# If secrets are used, comment, remove o rename the
+# environment variables in the .env file because
+# they can cause errors.
+# secrets:
+#   db_root_password:
+#     file: ./secrets/db_root_password.txt
+#   db_user_name:
+#    file: ./secrets/db_user_name.txt
+#   db_user_password:
+#    file: ./secrets/db_user_password.txt
+#   db_name:
+#    file: ./secrets/db_name.txt

@@ -1,0 +1,120 @@
+name: ${COMPOSE_NAME}
+
+services:
+  odoo:
+    image: odoo:${ODOO_IMAGE_VERSION}
+    container_name: ${ODOO_SERVICE_NAME}
+    # extends: # extends another service in another file
+    #   file: ${ODOO_EXTENDS_PATH_FILE}
+    #   service: ${ODOO_EXTENDS_SERVICE}
+    depends_on:
+      - database
+    env_file:
+      - path: ./.env
+        required: ${ODOO_ENV_FILE_REQUIRED}
+    restart: ${ODOO_RESTART}
+    environment:
+      HOST: ${DATABASE_NAME}
+      PORT: ${DATABASE_PORT}
+      # Odoo doesnt support secret files
+      USER: ${POSTGRES_USER}
+      PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - ${ODOO_PORT}:8069
+    volumes:
+      - type: volume
+        source: OdooVolume
+        target: /var/lib/odoo
+      - type: bind
+        source: ./config
+        target: /etc/odoo
+      - type: bind
+        source: ./addons
+        target: /mnt/extra-addons
+    networks:
+      - OdooNetwork
+    mem_limit: ${ODOO_MEM_LIMIT}
+    cpu_count: ${ODOO_CPU_COUNT}
+    blkio_config:
+      device_read_bps:
+        - path: /dev/sda
+          rate: ${DATABASE_READ_BPS}
+      device_write_bps:
+        - path: /dev/sda
+          rate: ${DATABASE_WRITE_BPS}
+      device_read_iops:
+        - path: /dev/sda
+          rate: ${DATABASE_READ_IOPS}
+      device_write_iops:
+        - path: /dev/sda
+          rate: ${DATABASE_WRITE_IOPS}
+
+  database:
+    image: postgres:${POSTGRES_IMAGE_VERSION}
+    container_name: ${DATABASE_NAME}
+    # extends: # extends another service in another file
+    #   file: ${DATABASE_EXTENDS_PATH_FILE}
+    #   service: ${DATABASE_EXTENDS_SERVICE}
+    env_file:
+      - path: ./.env
+        required: ${DATABASE_ENV_FILE_REQUIRED}
+    restart: ${DATABASE_RESTART}
+    # secrets:
+    #   - db_user
+    #   - db_name
+    #   - db_password
+    environment:
+      # ---- Env variables with secrets ----
+      # Odoo doesnt support secret files, make sure .env is configured correctly.
+      # POSTGRES_USER_FILE: /run/secrets/db_user
+      # POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      # POSTGRES_DB_FILE: /run/secrets/db_name
+
+      # ---- Env variables with .env ----
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - ${DATABASE_PORT}:5432
+    volumes:
+      - type: volume
+        source: DatabaseVolume
+        target: /var/lib/postgresql/data
+    networks:
+      - OdooNetwork
+    mem_limit: ${DATABASE_MEM_LIMIT}
+    cpu_count: ${DATABASE_CPU_COUNT}
+    blkio_config:
+      device_read_bps:
+        - path: /dev/sda
+          rate: ${DATABASE_READ_BPS}
+      device_write_bps:
+        - path: /dev/sda
+          rate: ${DATABASE_WRITE_BPS}
+      device_read_iops:
+        - path: /dev/sda
+          rate: ${DATABASE_READ_IOPS}
+      device_write_iops:
+        - path: /dev/sda
+          rate: ${DATABASE_WRITE_IOPS}
+
+volumes:
+  OdooVolume:
+    name: ${ODOO_VOLUME_NAME}
+  DatabaseVolume:
+    name: ${DATABASE_VOLUME_NAME}
+
+networks:
+  OdooNetwork:
+    name: ${NETWORK_NAME}
+
+# If secrets are used, comment, remove or rename the
+# environment variables in the .env file because
+# they can cause errors.
+# secrets:
+#   db_user:
+#    file: ./secrets/db_user.txt
+#   db_password:
+#    file: ./secrets/db_password.txt
+#   db_name:
+#    file: ./secrets/db_name.txt

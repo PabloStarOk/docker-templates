@@ -1,0 +1,90 @@
+{
+    "name": "${DEVCONTAINER_NAME}",
+    "workspaceMount": "type=${WORKSAPCE_MOUNT_TYPE},source=${localWorkspaceFolder},target=${WORKSPACE_TARGET}",
+    "workspaceFolder": "/path/to/devcontainer/folder",
+    "containerUser": "${CONTAINER_USER}",
+
+    // -- Compose Configuration--
+    "dockerComposeFile": "docker-compose.yaml",
+    "service": "devcontainer_service_primary", // Main service to connect the editor.
+    "runServices": [
+        "devcontainer_service_secondary" // Other services to start along with the devcontainer.
+    ],
+	"shutdownAction": "stopCompose",
+
+    // -- Ports configuration --
+	"forwardPorts": ["host:80"],
+	"portsAttributes": {
+		"80": {
+			"label": "SamplePort",
+            "protocol": "http",
+			"onAutoForward": "notify"
+		}
+	},
+
+    // -- Editor Customizations --
+    "customizations": {
+		"vscode": {
+			"extensions": [
+                "cweijan.vscode-mysql-client2",
+				"${DEFAULT_FORMATTER}",
+				"usernamehw.errorlens",
+				"eamodio.gitlens",
+				"PKief.material-icon-theme",
+				"leizongmin.node-module-intellisense",
+				"christian-kohler.npm-intellisense",
+				"christian-kohler.path-intellisense",
+				"VisualStudioExptTeam.vscodeintellicode",
+				"SonarSource.sonarlint-vscode",
+				"mgmcdermott.vscode-language-babel",
+				"miguelsolorio.fluent-icons"
+			],
+			"settings": {
+				// Formatting
+				"editor.defaultFormatter": "${DEFAULT_FORMATTER}",
+				"editor.formatOnPaste": true,
+				"editor.formatOnSave": true,
+				"editor.formatOnType": true,
+				"editor.codeActionsOnSave": {
+					"source.fixAll.eslint": "always",
+					"source.organizeImports": "always",
+					"source.sortImports": "always",
+					"source.removeUnusedImports": "always",
+					"source.removeUnused.ts": "always",
+					"source.addMissingImports.ts": "always"
+				},
+
+				// Guides
+				"editor.guides.bracketPairs": true,
+				"diffEditor.codeLens": true,
+
+				// Fonts
+				"editor.fontFamily": "Cascadia Code",
+				"editor.fontLigatures": true,
+				"editor.fontSize": 18,
+				"terminal.integrated.fontSize": 18,
+
+				// Cursor
+				"editor.cursorBlinking": "expand",
+				"editor.cursorStyle": "line",
+				"editor.cursorWidth": 3,
+				"editor.cursorSmoothCaretAnimation": "on",
+
+				// Minimap
+				"editor.minimap.autohide": false,
+
+				// Workbench
+				"workbench.iconTheme": "material-icon-theme",
+				"workbench.productIconTheme": "fluent-icons",
+				"workbench.editor.highlightModifiedTabs": true,
+
+				// Files
+				"files.trimFinalNewlines": true,
+    			"files.trimTrailingWhitespace": true,
+
+				// Explorer
+				"explorer.sortOrder": "type"
+			}
+		}
+	}
+}

@@ -1,0 +1,51 @@
+name: ${COMPOSE_NAME}
+
+services:
+  app:
+    image: node:${NODEJS_IMAGE_VERSION}
+    container_name: ${NODEJS_NAME}
+    # extends: # extends another service in another file
+    #   file: ${EXTENDS_PATH_FILE}
+    #   service: ${EXTENDS_SERVICE}
+    # depends_on:
+    #   - Foo
+    env_file:
+      - path: ./.env
+        required: ${ENV_FILE_REQUIRED}
+    restart: ${RESTART}
+    stdin_open: ${STDIN_OPEN} # True if it is a dev container
+    environment:
+      NODE_ENV: ${NODE_ENV}
+    ports:
+      - ${NODEJS_PORT}:3000
+    volumes:
+     - type: ${WORKSPACE_MOUNT_TYPE}
+       source: ${WORKSPACE_SOURCE}
+       target: ${WORKSPACE_TARGET}
+    networks:
+      - NodeJsNetwork
+    mem_limit: ${NODEJS_MEM_LIMIT}
+    cpu_count: ${NODEJS_CPU_COUNT}
+    blkio_config:
+      device_read_bps:
+        - path: /dev/sda
+          rate: ${NODEJS_READ_BPS}
+      device_write_bps:
+        - path: /dev/sda
+          rate: ${NODEJS_WRITE_BPS}
+      device_read_iops:
+        - path: /dev/sda
+          rate: ${NODEJS_READ_IOPS}
+      device_write_iops:
+        - path: /dev/sda
+          rate: ${NODEJS_WRITE_IOPS}
+
+
+# volumes:
+#   NodeJsVolume:
+#     name: ${NODEJS_VOLUME_NAME}
+
+networks:
+  NodeJsNetwork:
+    name: ${NETWORK_NAME}
+    driver: ${NETWORK_DRIVER}

@@ -1,0 +1,72 @@
+name: ${COMPOSE_NAME}
+
+services:
+  database:
+    image: postgres:${POSTGRES_IMAGE_VERSION}
+    container_name: ${DATABASE_NAME}
+    # extends: # extends another service in another file
+    #   file: ${EXTENDS_PATH_FILE}
+    #   service: ${EXTENDS_SERVICE}
+    # depends_on:
+    #   - Foo
+    env_file:
+      - path: ./.env
+        required: ${ENV_FILE_REQUIRED}
+    restart: ${DATABASE_RESTART}
+    # secrets:
+    #   - db_user
+    #   - db_password
+    #   - db_name
+    environment:
+      # ---- Env variables with secrets ----
+      # POSTGRES_USER_FILE: /run/secrets/db_user
+      # POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      # POSTGRES_DB_FILE: /run/secrets/db_name
+
+      # ---- Env variables with .env ----
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - ${DATABASE_PORT}:5432
+    volumes:
+      - type: volume
+        source: DatabaseVolume
+        target: /var/lib/postgresql/data
+    networks:
+      - DatabaseNetwork
+    mem_limit: ${DATABASE_MEM_LIMIT}
+    cpu_count: ${DATABASE_CPU_COUNT}
+    blkio_config:
+      device_read_bps:
+        - path: /dev/sda
+          rate: ${DATABASE_READ_BPS}
+      device_write_bps:
+        - path: /dev/sda
+          rate: ${DATABASE_WRITE_BPS}
+      device_read_iops:
+        - path: /dev/sda
+          rate: ${DATABASE_READ_IOPS}
+      device_write_iops:
+        - path: /dev/sda
+          rate: ${DATABASE_WRITE_IOPS}
+
+volumes:
+  DatabaseVolume:
+    name: ${DATABASE_VOLUME_NAME}
+
+networks:
+  DatabaseNetwork:
+   name: ${NETWORK_NAME}
+   driver: ${NETWORK_DRIVER}
+
+# If secrets are used, comment, remove o rename the
+# environment variables in the .env file because
+# they can cause errors.
+# secrets:
+#   db_user:
+#    file: ./secrets/db_user.txt
+#   db_password:
+#    file: ./secrets/db_password.txt
+#   db_name:
+#    file: ./secrets/db_name.txt
