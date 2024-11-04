@@ -8,6 +8,7 @@ Docker templates for `docker-compose.yaml`, `.devcontainer`, and `Dockerfile`.
 - NodeJS
 - Odoo
 - PostgreSQL
+- OpenSSH Server
 
 ### DevContainer
 - A generic and personal `.devcontainer` configuration designed to be used with Docker Compose files.

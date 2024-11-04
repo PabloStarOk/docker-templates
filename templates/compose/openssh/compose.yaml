@@ -1,0 +1,82 @@
+name: ${COMPOSE_NAME}
+
+services:
+  openssh:
+    image: linuxserver/openssh-server:${OPENSSH_IMAGE_VERSION}
+    container_name: ${OPENSSH_NAME}
+    hostname: ${OPENSSH_HOSTNAME}
+    # extends: # extends another service in another file
+    #   file: ${OPENSSH_EXTENDS_PATH_FILE}
+    #   service: ${OPENSSH_EXTENDS_SERVICE}
+    # depends_on:
+    #   - Foo
+    env_file:
+      - path: ./.env
+        required: ${OPENSSH_ENV_FILE_REQUIRED}
+    restart: ${OPENSSH_RESTART}
+    # secrets:
+    #   - user_name
+    #   - user_password
+    #   - public_key
+    environment:
+      # ---- Env variables with secrets ----
+      # FILE__PUBLIC_KEY: /run/secrets/public_key # User must be created in the container.
+      # FILE__USER_NAME: /run/secrets/user_name
+      # USER_PASSWORD_FILE: /run/secrets/user_password
+
+      # ---- Env variables with .env ----
+      PUID: ${OPENSSH_PUID}
+      PGID: ${OPENSSH_PGID}
+      TZ: ${OPENSSH_TZ}
+      PUBLIC_KEY: ${OPENSSH_PUBLIC_KEY}
+      # PUBLIC_KEY_FILE: ${OPENSSH_PUBLIC_KEY_FILE}
+      # PUBLIC_KEY_DIR: ${OPENSSH_PUBLIC_KEY_DIR}
+      # PUBLIC_KEY_URL: ${OPENSSH_PUBLIC_KEY_URL}
+      SUDO_ACCESS: ${OPENSSH_SUDO_ACCESS}
+      PASSWORD_ACCESS: ${OPENSSH_PASSWORD_ACCESS}
+      USER_NAME: ${OPENSSH_USER_NAME}
+      USER_PASSWORD: ${OPENSSH_USER_PASSWORD}
+      LOG_STDOUT: ${OPENSSH_LOG_STDOUT}
+    ports:
+      - ${OPENSSH_PORT}:2222
+    volumes:
+      - type: volume
+        source: OpenSshVolume
+        target: /config
+      # - type: bind # Mount config to a host directory
+      #   source: ./config
+      #   target: /config
+    networks:
+      - OpenSshNetwork
+    mem_limit: ${OPENSSH_MEM_LIMIT}
+    cpu_count: ${OPENSSH_CPU_COUNT}
+    blkio_config:
+      device_read_bps:
+        - path: /dev/sda
+          rate: ${OPENSSH_READ_BPS}
+      device_write_bps:
+        - path: /dev/sda
+          rate: ${OPENSSH_WRITE_BPS}
+      device_read_iops:
+        - path: /dev/sda
+          rate: ${OPENSSH_READ_IOPS}
+      device_write_iops:
+        - path: /dev/sda
+          rate: ${OPENSSH_WRITE_IOPS}
+
+volumes:
+  OpenSshVolume:
+    name: ${OPENSSH_VOLUME_NAME}
+
+networks:
+  OpenSshNetwork:
+   name: ${NETWORK_NAME}
+   driver: ${NETWORK_DRIVER}
+
+# secrets:
+#   public_key:
+#    file: ./secrets/public_key.txt
+#   user_name: # User must be created in the container.
+#     file: ./secrets/user_name.txt
+#   user_password:
+#    file: ./secrets/user_password.txt
