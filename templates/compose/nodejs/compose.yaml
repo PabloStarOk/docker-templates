@@ -29,16 +29,16 @@ services:
     cpu_count: ${NODEJS_CPU_COUNT}
     blkio_config:
       device_read_bps:
-        - path: /dev/sda
+        - path: ${NODEJS_DEVICE_PATH}
           rate: ${NODEJS_READ_BPS}
       device_write_bps:
-        - path: /dev/sda
+        - path: ${NODEJS_DEVICE_PATH}
           rate: ${NODEJS_WRITE_BPS}
       device_read_iops:
-        - path: /dev/sda
+        - path: ${NODEJS_DEVICE_PATH}
           rate: ${NODEJS_READ_IOPS}
       device_write_iops:
-        - path: /dev/sda
+        - path: ${NODEJS_DEVICE_PATH}
           rate: ${NODEJS_WRITE_IOPS}
 
 

@@ -34,20 +34,21 @@ services:
     networks:
       - OdooNetwork
     # Docker Compose V1
+    # TODO: Replace following lines with deploy
     mem_limit: ${ODOO_MEM_LIMIT}
     cpu_count: ${ODOO_CPU_COUNT}
     blkio_config:
       device_read_bps:
-        - path: /dev/sda
+        - path: ${ODOO_DEVICE_PATH}
           rate: ${DATABASE_READ_BPS}
       device_write_bps:
-        - path: /dev/sda
+        - path: ${ODOO_DEVICE_PATH}
           rate: ${DATABASE_WRITE_BPS}
       device_read_iops:
-        - path: /dev/sda
+        - path: ${ODOO_DEVICE_PATH}
           rate: ${DATABASE_READ_IOPS}
       device_write_iops:
-        - path: /dev/sda
+        - path: ${ODOO_DEVICE_PATH}
           rate: ${DATABASE_WRITE_IOPS}
 
   database:
@@ -87,16 +88,16 @@ services:
     cpu_count: ${DATABASE_CPU_COUNT}
     blkio_config:
       device_read_bps:
-        - path: /dev/sda
+        - path: ${DATABASE_DEVICE_PATH}
           rate: ${DATABASE_READ_BPS}
       device_write_bps:
-        - path: /dev/sda
+        - path: ${DATABASE_DEVICE_PATH}
           rate: ${DATABASE_WRITE_BPS}
       device_read_iops:
-        - path: /dev/sda
+        - path: ${DATABASE_DEVICE_PATH}
           rate: ${DATABASE_READ_IOPS}
       device_write_iops:
-        - path: /dev/sda
+        - path: ${DATABASE_DEVICE_PATH}
           rate: ${DATABASE_WRITE_IOPS}
 
 volumes:

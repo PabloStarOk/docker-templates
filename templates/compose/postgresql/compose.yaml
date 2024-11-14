@@ -40,16 +40,16 @@ services:
     cpu_count: ${DATABASE_CPU_COUNT}
     blkio_config:
       device_read_bps:
-        - path: /dev/sda
+        - path: ${DATABASE_DEVICE_PATH}
           rate: ${DATABASE_READ_BPS}
       device_write_bps:
-        - path: /dev/sda
+        - path: ${DATABASE_DEVICE_PATH}
           rate: ${DATABASE_WRITE_BPS}
       device_read_iops:
-        - path: /dev/sda
+        - path: ${DATABASE_DEVICE_PATH}
           rate: ${DATABASE_READ_IOPS}
       device_write_iops:
-        - path: /dev/sda
+        - path: ${DATABASE_DEVICE_PATH}
           rate: ${DATABASE_WRITE_IOPS}
 
 volumes:
