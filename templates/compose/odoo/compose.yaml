@@ -33,6 +33,7 @@ services:
         target: /mnt/extra-addons
     networks:
       - OdooNetwork
+    # Docker Compose V1
     mem_limit: ${ODOO_MEM_LIMIT}
     cpu_count: ${ODOO_CPU_COUNT}
     blkio_config:

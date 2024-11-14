@@ -48,6 +48,7 @@ services:
       #   target: /config
     networks:
       - OpenSshNetwork
+    # Docker Compose V1
     mem_limit: ${OPENSSH_MEM_LIMIT}
     cpu_count: ${OPENSSH_CPU_COUNT}
     blkio_config:

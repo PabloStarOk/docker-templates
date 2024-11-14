@@ -24,6 +24,7 @@ services:
        target: ${WORKSPACE_TARGET}
     networks:
       - NodeJsNetwork
+    # Docker Compose V1
     mem_limit: ${NODEJS_MEM_LIMIT}
     cpu_count: ${NODEJS_CPU_COUNT}
     blkio_config:

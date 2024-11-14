@@ -35,6 +35,7 @@ services:
         target: /var/lib/postgresql/data
     networks:
       - DatabaseNetwork
+    # Docker Compose V1
     mem_limit: ${DATABASE_MEM_LIMIT}
     cpu_count: ${DATABASE_CPU_COUNT}
     blkio_config:
