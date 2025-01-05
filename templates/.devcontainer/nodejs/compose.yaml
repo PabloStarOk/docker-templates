@@ -1,0 +1,38 @@
+version: '1.0'
+
+name: ${COMPOSE_NAME}
+
+services:
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ${Node_NAME}
+    env_file:
+      - path: ./.env
+        required: ${ENV_FILE_REQUIRED}
+    restart: ${RESTART}
+    stdin_open: ${STDIN_OPEN} # True if it is a dev container
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      CI: ${CI_ENV}
+    volumes:
+     - type: ${WORKSPACE_MOUNT_TYPE}
+       source: ${WORKSPACE_SOURCE}
+       target: ${WORKSPACE_TARGET}
+    networks:
+      - NodeDevNetwork
+    # If needed, uncomment the following lines to set resource limits
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: ${NODE_MAX_CPU_COUNT}
+    #       memory: ${NODE_MAX_MEM}
+    #     reservations:
+    #       cpus: ${NODE_MIN_CPU_COUNT}
+    #       memory: ${NODE_MIN_MEM}
+
+networks:
+  NodeDevNetwork:
+    name: ${NETWORK_NAME}
+    driver: ${NETWORK_DRIVER}
