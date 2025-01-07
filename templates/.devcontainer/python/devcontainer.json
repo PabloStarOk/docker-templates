@@ -17,7 +17,8 @@
 				"ms-toolsai.vscode-jupyter-slideshow",
 				"ms-python.black-formatter",
 				"ms-toolsai.datawrangler",
-				"ms-python.vscode-pylance"
+				"ms-python.vscode-pylance",
+				"GrapeCity.gc-excelviewer"
 			],
 			"settings": {
 				"terminal.integrated.defaultProfile.linux": "bash",
